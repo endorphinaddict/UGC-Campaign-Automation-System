@@ -29,10 +29,21 @@ Tools for making, posting and submitting UGC campaign videos. See [PLAN.md](PLAN
 4. **Install the caption tool.** In PowerShell, go to the project folder and install:
    ```
    cd $HOME\Documents\UGC\UGC-Campaign-Automation-System
-   pip install -r requirements.txt
+   python -m pip install -r requirements.txt
    ```
 
 Check it worked: `ffmpeg -version` and `python --version` should both print a version number.
+
+**If you have a very new Python (3.15 or later)**, step 4 may get stuck building packages, because the
+caption tool doesn't support it yet. Press Ctrl+C, then install Python 3.13 alongside it and use that:
+```
+py install 3.13
+py -V:3.13 -m pip install -r requirements.txt
+```
+Then start every command below with `py -V:3.13` instead of `python`.
+
+**Tip:** to open PowerShell already inside the project folder, open the folder in File Explorer, click
+the address bar, type `powershell` and press Enter.
 
 ## Making a video
 
