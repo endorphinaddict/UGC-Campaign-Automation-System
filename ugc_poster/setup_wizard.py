@@ -10,6 +10,9 @@ def run_setup(settings_path, ask=input, graph_cls=Graph):
     print("UGC poster setup. Follow docs/meta-setup.md to get these three values.")
     print("Don't send screenshots of this window to anyone: the keys work like passwords.\n")
     app_id = ask("App ID: ").strip()
+    if not app_id.isdigit():
+        raise PosterError("The App ID is only numbers (App settings -> Basic). "
+                          "If you pasted a long code starting with EAA, that's the access token.")
     app_secret = ask("App Secret: ").strip()
     short_token = ask("Access token from Graph API Explorer: ").strip()
     if not (app_id and app_secret and short_token):
