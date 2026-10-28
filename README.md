@@ -1,94 +1,52 @@
 # UGC Campaign Automation System
 
-Tools for making, posting and submitting UGC campaign videos. See [PLAN.md](PLAN.md) for the roadmap.
+Posts finished videos to **Instagram Reels** and **Facebook Reels**, and collects the post links into
+a file for MediaMaxxing's **Bulk Import**. Videos are edited in Voyager. See [PLAN.md](PLAN.md) for
+the roadmap.
 
-**Ready now:** the video editor. It takes two clips and makes one vertical 1080×1920 video:
+## Daily use
 
-```
-┌──────────────┐
-│  top clip    │  ← e.g. the video you're copying
-│              │
-│   CAPTIONS   │  ← auto-generated from speech, on the dividing line
-│ bottom clip  │  ← e.g. you, filmed on your phone
-│              │
-└──────────────┘
-   + music underneath
-```
+1. Export finished videos from Voyager into the **`ready`** folder.
+2. Captions (optional):
+   - **Same caption for everything:** edit **`default_caption.txt`**.
+   - **Caption for one video:** create a .txt file with the same name, e.g. `clip7.mp4` + `clip7.txt`.
+3. Double-click **`post.bat`**. Each video is posted to Instagram and Facebook, then moved to the
+   **`posted`** folder.
+4. In MediaMaxxing go to **Advanced Submit → Bulk Import → Upload File** and pick the newest file in
+   the **`links`** folder. Then click **Import Links** and **Submit All**.
 
-## One-time setup on Windows
+If an upload fails, the video stays in `ready`. Run `post.bat` again: it only retries what's missing
+and never posts the same video twice to a platform.
 
-1. **Install Python.** Download it from https://www.python.org/downloads/. In the installer, tick
-   **"Add python.exe to PATH"** before clicking Install.
-2. **Install ffmpeg** (the video engine). Open **PowerShell** (Start menu → type "PowerShell") and run:
-   ```
-   winget install Gyan.FFmpeg
-   ```
-   Close PowerShell and open it again afterwards.
-3. **Download this project.** On the GitHub page click **Code → Download ZIP**, then unzip it somewhere
-   easy, like `Documents\UGC`.
-4. **Install the caption tool.** In PowerShell, go to the project folder and install:
-   ```
-   cd $HOME\Documents\UGC\UGC-Campaign-Automation-System
-   python -m pip install -r requirements.txt
-   ```
+A record of everything posted (date, video, platform, link) is kept in `posted\posting_log.csv`,
+which opens in Excel.
 
-Check it worked: `ffmpeg -version` and `python --version` should both print a version number.
+## One-time setup
 
-**If you have a very new Python (3.15 or later)**, step 4 may get stuck building packages, because the
-caption tool doesn't support it yet. Press Ctrl+C, then install Python 3.13 alongside it and use that:
-```
-py install 3.13
-py -V:3.13 -m pip install -r requirements.txt
-```
-Then start every command below with `py -V:3.13` instead of `python`.
+1. **Python and the project files:** if you already did this for the editor, skip it. Otherwise
+   install Python from https://www.python.org/downloads/ and download this project
+   (**Code → Download ZIP** on GitHub, then right-click → **Extract All**). Nothing else needs installing.
+2. **Connect Instagram and Facebook:** follow [docs/meta-setup.md](docs/meta-setup.md), which ends
+   with double-clicking **`setup.bat`**.
 
-**Tip:** to open PowerShell already inside the project folder, open the folder in File Explorer, click
-the address bar, type `powershell` and press Enter.
+Your access key is saved in `settings.json` on your PC. It's never uploaded to GitHub. Don't share it.
 
-## Making a video
+## Extra options
 
-In PowerShell, from the project folder:
+From PowerShell in the project folder (tip: type `powershell` in File Explorer's address bar):
 
-```
-python -m ugc_editor --top inspo.mp4 --bottom me.mp4 --music song.mp3
-```
-
-The finished video is saved in the `output` folder. Tip: you can drag a file from File Explorer into
-the PowerShell window to paste its full path.
-
-The first time you use auto captions, the speech model downloads (about 150 MB), so it takes a
-little longer.
-
-### Useful options
-
-| Option | What it does |
+| Command | What it does |
 | --- | --- |
-| `--out my_video.mp4` | Choose where to save the result |
-| `--split 0.6` | Give the top clip 60% of the screen (default 0.5 = half each) |
-| `--fit blur` | Show each whole clip over a blurred copy instead of cropping the edges |
-| `--audio bottom` | Keep only your own clip's sound. Choices: `top`, `bottom`, `both` (default), `none` |
-| `--top-volume 0.5` | Make the top clip's sound quieter (same for `--bottom-volume`) |
-| `--music-volume 0.25` | Louder music (default 0.15) |
-| `--length bottom` | Make the video as long as the bottom clip (default: the shorter clip) |
-| `--max-seconds 30` | Cut the video off at 30 seconds |
-| `--captions none` | No captions |
-| `--srt captions.srt` | Use your own caption file instead of auto captions |
-| `--caption-position bottom` | Put captions low on the screen (`middle` is default, also `top`) |
-| `--words-per-caption 2` | Fewer words on screen at a time |
-| `--font-size 90 --caption-color "#FFE600"` | Bigger, yellow captions |
-| `--no-uppercase` | Normal case instead of ALL CAPS |
-| `--whisper-model small` | More accurate captions (slower) |
+| `python -m ugc_poster post --dry-run` | Shows what would be posted, without posting |
+| `python -m ugc_poster post --limit 5` | Posts only the 5 oldest videos (e.g. to spread posts through the day) |
+| `python -m ugc_poster post --only facebook` | Posts to one platform only |
 
-See every option with `python -m ugc_editor --help`.
+To turn a platform off permanently, open `settings.json` in Notepad and change `"instagram": true`
+(or `"facebook"`) to `false`.
 
-### Example
+## Other tools
 
-Your clip on the bottom taking up a bit more space, only your voice, louder music, captions in the
-lower part of the screen:
-
-```
-python -m ugc_editor --top inspo.mp4 --bottom me.mp4 --music song.mp3 --split 0.45 --audio bottom --music-volume 0.25 --caption-position bottom
-```
+- [docs/editor.md](docs/editor.md): optional command-line video editor (split screen, music, captions)
 
 ## Running the tests
 

@@ -8,3 +8,10 @@ output/
 *.mp3
 *.m4a
 *.wav
+settings.json
+ready/*
+!ready/.gitkeep
+posted/*
+!posted/.gitkeep
+links/*
+!links/.gitkeep

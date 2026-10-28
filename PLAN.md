@@ -1,32 +1,28 @@
 # Plan
 
 Campaign: **melty.gg**, submitted through MediaMaxxing for view-based payment. Single user, Windows PC.
+About 50 videos a week, posted to Instagram Reels, Facebook Reels and YouTube Shorts.
 
-## Phase 1: Video editor (done)
+## Editing: Voyager
 
-- [x] Stack two clips vertically (top: copied clip, bottom: self-filmed), 1080×1920
-- [x] Crop-to-fill or fit-over-blur for each half, adjustable split
-- [x] Background music with volume control and fade-out
-- [x] Auto captions from speech (faster-whisper), or an existing .srt file
-- [ ] Later ideas: batch-edit a whole folder, saved presets per campaign, text hook at the start
+Videos are edited in Voyager. The command-line editor in `ugc_editor/` ([docs/editor.md](docs/editor.md))
+stays available as a free, batch-friendly alternative.
 
-## Phase 2: Posting
+## Posting
 
-Post finished videos to each platform, one at a time as access is approved.
+- [x] Instagram Reels + Facebook Reels poster (`ugc_poster/`): posts everything in `ready/`, retries
+      safely, moves posted videos, logs every link
+- [ ] One-time Meta setup on the user's PC ([docs/meta-setup.md](docs/meta-setup.md))
+- [ ] YouTube Shorts: YouTube Data API. Needs a Google Cloud project, and Google's audit before
+      uploads can be public and before the daily quota (about 6 uploads) can be raised.
 
-- [ ] Decide which platforms (TikTok, Instagram Reels, YouTube Shorts, ...)
-- [ ] YouTube Shorts: YouTube Data API (Google Cloud project + OAuth)
-- [ ] Instagram Reels: Instagram Graph API (needs a Business/Creator account linked to a Facebook Page)
-- [ ] TikTok: Content Posting API (needs TikTok app review), or another approved route
-- [ ] Captions/hashtags per post
+## Submission to MediaMaxxing
 
-## Phase 3: Submission and trends
-
-- [ ] Submit each live post link to the MediaMaxxing campaign. First check whether MediaMaxxing has an
-      API or official integration. Automating its web form may break its terms and risk payouts.
-- [ ] Trend research and a "what performs well" dashboard
+- [x] Each posting run writes a `links/links_<date>.txt` file (one link per line) for
+      **Advanced Submit → Bulk Import**. No automation of MediaMaxxing's site, so no risk to payouts.
 
 ## Later
 
+- [ ] Trend research and a "what performs well" report (`posted/posting_log.csv` is the starting data)
 - [ ] View tracker across platforms (postponed)
-- [ ] Decide where the system runs day to day (your PC or a small cloud server)
+- [ ] Run posting on a schedule (e.g. Windows Task Scheduler)
